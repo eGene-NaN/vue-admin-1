@@ -14,6 +14,13 @@ module.exports = {
     chainWebpack: (config) => {
     },
     configureWebpack: (config) => {
+        // 配置解析别名
+        config.resolve = {
+            extensions: ['.js', '.json', '.vue'], // 自动添加文件名后缀
+            alias: {
+                '@': path.resolve(__dirname, './src')
+            }
+        }
     },
     // 生产环境是否生成 sourceMap 文件
     productionSourceMap: false,
