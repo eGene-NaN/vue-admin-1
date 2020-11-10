@@ -49,7 +49,8 @@
             </el-col>
             <el-col :span="10">
               <el-button type="success"
-                         class="block">获取验证码</el-button>
+                         class="block"
+                         @click="getSms()">获取验证码</el-button>
             </el-col>
           </el-row>
         </el-form-item>
@@ -73,7 +74,9 @@ import {
   validataCode
 } from "@/utils/validata.js";
 
+import { GetSms } from "@/api/login.js";
 import { ref, reactive, isRef, toRefs, onMounted } from "@vue/composition-api";
+//import axios from "axios";
 
 export default {
   name: "login",
@@ -199,6 +202,10 @@ export default {
       model.value = data.type;
     };
 
+    // 获取验证码
+    const getSms = () => {
+      GetSms();
+    };
     const submitForm = formName => {
       context.refs[formName].validate(valid => {
         if (valid) {
@@ -218,7 +225,9 @@ export default {
      * 三、生命周期
      */
     // 挂载完成后
-    onMounted(() => {});
+    onMounted(() => {
+      // GetSms();
+    });
 
     return {
       model,
@@ -227,6 +236,7 @@ export default {
       ruleForm,
       rules,
       toggleMenu,
+      getSms,
       submitForm
     };
   }
