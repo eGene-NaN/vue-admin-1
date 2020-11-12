@@ -2,13 +2,13 @@ import service from "@/utils/request.js";
 /**
  * 获取验证码
  */
-export function GetSms() {
-  service.request({
+export function GetSms(requestData) {
+  return service.request({
     method: "post",
     url: "/getSms/",
     data: {
-      firstName: "Fred",
-      lastName: "Flintstone_wnwnwnwn1123"
+      username: requestData.username,
+      module: requestData.module
     }
   })
 }

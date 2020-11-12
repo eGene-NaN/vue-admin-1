@@ -19,14 +19,16 @@
                size="small">
         <el-form-item prop="username"
                       class="item-form">
-          <label>邮箱</label>
-          <el-input type="text"
+          <label for="userName">邮箱</label>
+          <el-input id="userName"
+                    type="text"
                     v-model="ruleForm.username"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <label>密码</label>
-          <el-input type="text"
+          <label for="password">密码</label>
+          <el-input id="password"
+                    type="text"
                     v-model="ruleForm.password"
                     autocomplete="off"
                     minlength="6"
@@ -34,18 +36,20 @@
         </el-form-item>
         <el-form-item prop="passwords"
                       v-if="model === 'register'">
-          <label>重复密码</label>
-          <el-input type="text"
+          <label for="passwords">重复密码</label>
+          <el-input id="passwords"
+                    type="text"
                     v-model="ruleForm.passwords"
                     autocomplete="off"
                     minlength="6"
                     maxlength="20"></el-input>
         </el-form-item>
         <el-form-item prop="code">
-          <label>验证码</label>
+          <label for="code">验证码</label>
           <el-row :gutter="8">
             <el-col :span="14">
-              <el-input v-model.number="ruleForm.code"></el-input>
+              <el-input id="code"
+                        v-model.number="ruleForm.code"></el-input>
             </el-col>
             <el-col :span="10">
               <el-button type="success"
@@ -57,7 +61,8 @@
         <el-form-item>
           <el-button type="danger"
                      @click="submitForm('ruleForm')"
-                     class="login-btn block">提交
+                     v-bind:disabled="loginButtonStatus"
+                     class="login-btn block">{{ model === "login" ? "登录" : "注册"}}
           </el-button>
           <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
         </el-form-item>
@@ -82,7 +87,17 @@ export default {
   name: "login",
 
   // vue3.0 这里放置2.0中的data数据、生命周期函数、自定义函数等
-  setup(props, context) {
+  setup(props, { context, root }) {
+    /**
+     * context包含的内容
+      attrs: (...) == this.$attrs
+      emit: (...) == this.$emit
+      isServer: (...) == ???
+      listeners: (...) == this.listeners
+      parent: (...) == this.parent
+      refs: (...) == this.refs
+      root: (...) == this
+     */
     // 验证用户名
     let validateUsername = (rule, value, callback) => {
       if (value === "") {
@@ -151,6 +166,7 @@ export default {
      */
     // 声明基础类型数据
     const model = ref("login"); // 模块值
+    const loginButtonStatus = ref(true); // 登录按钮状态
     //console.log(model.value);
 
     // 声明对象类型数据
@@ -204,7 +220,28 @@ export default {
 
     // 获取验证码
     const getSms = () => {
-      GetSms();
+      // if (ruleForm.username == "") {
+      //   root.$message.error("邮箱不能为空");
+      //   return false;
+      // }
+
+      if (validataMail(ruleForm.username)) {
+        root.$message.error("邮箱格式有误，请重新输入");
+        return false;
+      }
+      let requestData = {
+        username: ruleForm.username,
+        module: "login"
+      };
+      GetSms(requestData)
+        .then(response => {
+          console.log("GetSms Right(Promise.resolve)");
+          console.log(response);
+        })
+        .catch(error => {
+          console.log("GetSms Error(Promise.reject)");
+          console.log(error);
+        });
     };
     const submitForm = formName => {
       context.refs[formName].validate(valid => {
@@ -231,6 +268,7 @@ export default {
 
     return {
       model,
+      loginButtonStatus,
       menuTab,
       objX,
       ruleForm,
