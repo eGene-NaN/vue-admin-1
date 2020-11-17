@@ -6,7 +6,7 @@ import { Message } from 'element-ui';
 const BASEURL = process.env.NODE_ENV === 'production' ? '' : '/devApi';
 const service = axios.create({
   baseURL: BASEURL, // http://localhost:8080/devApi/ = http://www.web-jshtml.cn/productapi
-  setTimeout: 1000,
+  setTimeout: 10000, // 设置请求的时间，超时的情况就停掉请求
 });
 
 // 添加请求拦截器
