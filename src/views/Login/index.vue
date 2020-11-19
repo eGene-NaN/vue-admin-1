@@ -49,7 +49,7 @@
           <el-row :gutter="8">
             <el-col :span="14">
               <el-input id="code"
-                        v-model.number="ruleForm.code"></el-input>
+                        v-model="ruleForm.code"></el-input>
             </el-col>
             <el-col :span="10">
               <el-button type="success"
@@ -80,7 +80,7 @@ import {
   validataCode,
 } from "@/utils/validata.js";
 
-import { GetSms, Register } from "@/api/login.js";
+import { GetSms, Login, Register } from "@/api/login.js";
 import { ref, reactive, isRef, toRefs, onMounted } from "@vue/composition-api";
 //import axios from "axios";
 
@@ -263,7 +263,7 @@ export default {
             // 启用登录/注册按钮
             loginButtonStatus.value = false;
             // 调用定时器，倒计时
-            countDown(5);
+            countDown(3);
           })
           .catch((error) => {
             console.log("GetSms Error(Promise.reject)");
@@ -276,26 +276,52 @@ export default {
     const submitForm = (formName) => {
       refs[formName].validate((valid) => {
         if (valid) {
-          let requestData = {
-            username: ruleForm.username,
-            password: ruleForm.password,
-            code: ruleForm.code,
-            module: "register",
-          };
-          Register(requestData)
-            .then((response) => {
-              let data = response.data;
-              root.$message({
-                message: data.message,
-                type: "success",
-              });
-            })
-            .catch((error) => {});
+          model.value === "login" ? login() : register();
         } else {
           console.log("error submit!!");
           return false;
         }
       });
+    };
+
+    /**
+     * 登录
+     */
+    const login = () => {
+      let requestData = {
+        username: ruleForm.username,
+        password: ruleForm.password,
+        code: ruleForm.code,
+        // module: "login",
+      };
+      Login(requestData)
+        .then((response) => {})
+        .catch((error) => {});
+    };
+
+    /**
+     * 注册
+     */
+    const register = () => {
+      let requestData = {
+        username: ruleForm.username,
+        password: ruleForm.password,
+        code: ruleForm.code,
+        module: "register",
+      };
+      // 注册接口
+      Register(requestData)
+        .then((response) => {
+          let data = response.data;
+          root.$message({
+            message: data.message,
+            type: "success",
+          });
+          // 注册成功后切换到登录tab，清除计时器
+          toggleMenu(menuTab[0]);
+          clearCountDown();
+        })
+        .catch((error) => {});
     };
 
     // 倒计时
@@ -306,6 +332,10 @@ export default {
       //   console.log("setTimeout");
       // }, 1000);
 
+      // 判断定时器是否存在，存在则清除
+      if (timer.value === 0) {
+        clearInterval(timer.value);
+      }
       let time = number;
       timer.value = setInterval(() => {
         time--;
@@ -318,6 +348,15 @@ export default {
           codeButtonStatus.text = `倒计时${time}秒`;
         }
       }, 1000);
+    };
+
+    // 清除倒计时
+    const clearCountDown = () => {
+      // 还原获取验证码按钮状态
+      codeButtonStatus.status = false;
+      codeButtonStatus.text = "获取验证码";
+      // 清除计时器
+      clearInterval(timer.value);
     };
 
     // resetForm(formName) {
