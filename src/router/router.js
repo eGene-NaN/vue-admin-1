@@ -10,12 +10,24 @@ export default new Router({
       path: "/",
       // name: "home",
       // component: Home
-      redirect: "login"
+      redirect: "login",
     },
     {
       path: "/login",
       name: "Login",
-      component: () => import("../views/Login/index.vue")
+      component: () => import("../views/Login/index.vue"),
+    },
+    {
+      path: "/console",
+      name: "Console",
+      component: () => import("../views/Layout/index.vue"),
+      children: [
+        {
+          path: "/console",
+          name: "Console",
+          component: () => import("../views/Console/index.vue"),
+        },
+      ],
     },
     {
       path: "/about",
@@ -24,7 +36,7 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () =>
-        import(/* webpackChunkName: "about" */ "../views/About.vue")
-    }
-  ]
+        import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    },
+  ],
 });

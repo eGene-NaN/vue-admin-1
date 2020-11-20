@@ -63,7 +63,7 @@
           <el-button type="danger"
                      @click="submitForm('loginForm')"
                      v-bind:disabled="loginButtonStatus"
-                     class="login-btn block">{{ model === "login" ? "登录" : "注册"}}
+                     class="login-btn block">{{ model === "login" ? "登录" : "注册" }}
           </el-button>
           <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
         </el-form-item>
@@ -82,6 +82,7 @@ import {
 
 import { GetSms, Login, Register } from "@/api/login.js";
 import { ref, reactive, isRef, toRefs, onMounted } from "@vue/composition-api";
+import sha1 from "js-sha1";
 //import axios from "axios";
 
 export default {
@@ -197,7 +198,7 @@ export default {
 
     // 表单绑定数据
     const ruleForm = reactive({
-      username: "",
+      username: "110985321@qq.com",
       password: "",
       passwords: "",
       code: "",
@@ -226,8 +227,20 @@ export default {
       // tab切换
       model.value = data.type;
       // 重置表单
-      // refs["loginForm"].resetFields();
+      resetFormData();
+      // 清除倒计时
+      clearCountDown();
+    };
+
+    // 重置表单
+    const resetFormData = () => {
       refs.loginForm.resetFields();
+      // refs["loginForm"].resetFields();
+    };
+    // 更新按钮状态
+    const updateButtonStatus = (params) => {
+      codeButtonStatus.status = params.status;
+      codeButtonStatus.text = params.text;
     };
 
     // 获取验证码
@@ -247,8 +260,10 @@ export default {
       };
 
       // 修改获取验证码按钮状态
-      codeButtonStatus.status = true;
-      codeButtonStatus.text = "发送中";
+      updateButtonStatus({
+        stauts: true,
+        text: "发送中",
+      });
 
       setTimeout(() => {
         // 请求接口
@@ -290,12 +305,19 @@ export default {
     const login = () => {
       let requestData = {
         username: ruleForm.username,
-        password: ruleForm.password,
+        password: sha1(ruleForm.password),
         code: ruleForm.code,
         // module: "login",
       };
       Login(requestData)
-        .then((response) => {})
+        .then((response) => {
+          console.log("登录成功");
+          console.log(response);
+          // 页面跳转
+          root.$router.push({
+            name: "Console",
+          });
+        })
         .catch((error) => {});
     };
 
@@ -305,7 +327,7 @@ export default {
     const register = () => {
       let requestData = {
         username: ruleForm.username,
-        password: ruleForm.password,
+        password: sha1(ruleForm.password),
         code: ruleForm.code,
         module: "register",
       };
@@ -342,8 +364,10 @@ export default {
         if (time === 0) {
           // 清除定时器
           clearInterval(timer.value);
-          codeButtonStatus.status = false;
-          codeButtonStatus.text = "再次获取";
+          updateButtonStatus({
+            stauts: false,
+            text: "再次获取",
+          });
         } else {
           codeButtonStatus.text = `倒计时${time}秒`;
         }
@@ -353,15 +377,13 @@ export default {
     // 清除倒计时
     const clearCountDown = () => {
       // 还原获取验证码按钮状态
-      codeButtonStatus.status = false;
-      codeButtonStatus.text = "获取验证码";
+      updateButtonStatus({
+        stauts: false,
+        text: "获取验证码",
+      });
       // 清除计时器
       clearInterval(timer.value);
     };
-
-    // resetForm(formName) {
-    //   this.$refs[formName].resetFields();
-    // }
 
     /**
      * 三、生命周期

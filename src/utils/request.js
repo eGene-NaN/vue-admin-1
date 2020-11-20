@@ -9,17 +9,23 @@ const service = axios.create({
   setTimeout: 10000, // 设置请求的时间，超时的情况就停掉请求
 });
 
-// 添加请求拦截器
+/**
+ * 请求接口前，做一些数据处理（请求拦截器）
+ */
 service.interceptors.request.use(function (config) {
-  // 在发送请求之前做些什么
-  console.log(config);
+  // 后台需要前端传的相关参数（在请求头添加参数）
+  console.log(config.headers);
+  // config.headers.Token = "111";
+  config.headers["Token"] = "222";
   return config;
 }, function (error) {
   // 对请求错误做些什么
   return Promise.reject(error);
 });
 
-// 添加响应拦截器
+/**
+ * 请求接口后，返回数据进行拦截（响应拦截器）
+ */
 service.interceptors.response.use(function (response) {
   // 对响应数据做点什么
   console.log(response);
