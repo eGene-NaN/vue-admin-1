@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1>用户列表</h1>
+    <h1>信息分类</h1>
   </div>
 </template>
 <script>
 export default {
-  name: "userIndex",
+  name: "category",
   setup(props) {},
 };
 </script>
