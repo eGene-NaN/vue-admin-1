@@ -1,5 +1,5 @@
 <template>
-  <div>控制台首页</div>
+  <div id="aaa">控制台首页</div>
 </template>
 <script>
 export default {};
