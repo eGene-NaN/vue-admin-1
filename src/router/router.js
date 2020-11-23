@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-// import Home from "./views/Home.vue";
+import Layout from "@/views/Layout/index.vue";
 
 Vue.use(Router);
 
@@ -34,8 +34,10 @@ export default new Router({
       redirect: "index",
       meta: {
         name: "控制台",
+        // icon: "el-icon-s-help", // 使用elementUi的icon
+        icon: "console", // 使用自定义icon
       },
-      component: () => import("../views/Layout/index.vue"),
+      component: Layout,
       children: [
         {
           path: "/index",
@@ -57,8 +59,9 @@ export default new Router({
       hidden: false,
       meta: {
         name: "信息管理",
+        icon: "info",
       },
-      component: () => import("../views/Layout/index.vue"),
+      component: Layout,
       children: [
         {
           path: "/infoIndex",
@@ -88,6 +91,7 @@ export default new Router({
       hidden: false,
       meta: {
         name: "用户管理",
+        icon: "user",
       },
       component: () => import("../views/Layout/index.vue"),
       children: [

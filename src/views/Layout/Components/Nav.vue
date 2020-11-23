@@ -17,7 +17,9 @@
                     :index="index + ''">
           <!-- 一级菜单 -->
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <!-- <i :class="item.meta.icon"></i> -->
+            <svg-icon :iconClass="item.meta.icon"
+                      :className="item.meta.icon" />
             <span slot="title">{{ item.meta.name }}</span>
           </template>
           <!-- 子级菜单 -->
@@ -28,7 +30,6 @@
           </el-menu-item-group>
         </el-submenu>
       </template>
-
     </el-menu>
   </div>
 </template>
@@ -65,5 +66,9 @@ export default {
   width: $navMenu;
   height: 100vh;
   background-color: #344a5f;
+  svg {
+    font-size: 20px;
+    margin-right: 10px;
+  }
 }
 </style>
