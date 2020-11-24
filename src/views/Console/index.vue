@@ -1,5 +1,7 @@
 <template>
-  <div id="aaa">控制台首页</div>
+  <div>
+    <h1>控制台首页</h1>
+  </div>
 </template>
 <script>
 export default {};

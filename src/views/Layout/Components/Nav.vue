@@ -10,7 +10,6 @@
              text-color="#fff"
              active-text-color="fff"
              router>
-
       <template v-for="(item, index) in routers">
         <el-submenu v-if="!item.hidden"
                     :key="item.id"

@@ -28,7 +28,7 @@ module.exports = {
     config.resolve = {
       extensions: [".js", ".json", ".vue"], // 自动添加文件名后缀
       alias: {
-        vue: "vue/dist/vue.js",
+        vue: "vue/dist/vue.js", // 修改vue运行模式(runtime模式(默认)、模板模式)
         "@": path.resolve(__dirname, "./src"),
       },
     };
