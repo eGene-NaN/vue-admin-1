@@ -26,7 +26,7 @@ export default {};
   width: 100%;
   height: 100%;
   padding-top: $layoutHeader + 30;
-  padding-left: $navMenu + 30;
+  // padding-left: $navMenu + 30;
   padding-right: 30px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -38,5 +38,17 @@ export default {};
   // -webkit-box-sizing: border-box;
   box-sizing: border-box;
   background-color: #addfaa;
+}
+.open {
+  #main-wrap {
+    // width: $navMenu;
+    padding-left: $navMenu + 30;
+  }
+}
+.close {
+  #main-wrap {
+    // width: $navMenuMin;
+    padding-left: $navMenuMin + 30
+  }
 }
 </style>
