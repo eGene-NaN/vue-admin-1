@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     isCollapse:
       JSON.parse(window.sessionStorage.getItem("isCollapse")) || false,
-      // JSON.parse(Cookie.get("isCollapse")) || false,
+    // JSON.parse(Cookie.get("isCollapse")) || false,
     stateCount: 10,
   },
   // getters是state的计算属性，对state加工，是派生出来的数据
@@ -19,6 +19,8 @@ export default new Vuex.Store({
     },
     // stateCount: (state) => state.stateCount + 10,
   },
+
+  // 同步的，不需要处理回调
   mutations: {
     SET_COLLAPSE(state) {
       state.isCollapse = !state.isCollapse;
@@ -54,5 +56,18 @@ export default new Vuex.Store({
       console.log("store's mutations " + state.stateCount);
     },
   },
-  actions: {},
+
+  actions: {
+    setMenuStatus(content, data) {
+      // content.state
+      // content.getters
+      // content.commit
+      // content.rootGetters
+      // content.rootState
+      console.log("store--actions--start");
+      console.log(data);
+      content.commit("SET_COLLAPSE");
+      console.log("store--actions--end");
+    },
+  },
 });

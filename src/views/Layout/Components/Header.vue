@@ -24,7 +24,11 @@ export default {
   name: "layoutHeader",
   setup(props, { root }) {
     const navMenuState = () => {
-      root.$store.commit("SET_COLLAPSE");
+      // 调用store中的mutations
+      // root.$store.commit("SET_COLLAPSE");
+
+      // root.$store.dispatch("setMenuStatus");
+      root.$store.dispatch("setMenuStatus", { name: "XYZ" });
     };
 
     return {
