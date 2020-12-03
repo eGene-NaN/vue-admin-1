@@ -2,6 +2,7 @@
   <div id="main-wrap">
     <div class="main-content">
       <div class="content">
+        {{ bbb }}
         <router-view />
       </div>
     </div>
@@ -11,7 +12,8 @@
 import { ref, reactive } from "@vue/composition-api";
 export default {
   name: "layoutMain",
-  setup() {
+  setup(props, { root }) {
+    const bbb = root.$store.state.login.loginA;
     // 字符串转json对象
     const str = ref('{"name": "是我。是我。", "title": "BBB"}');
     console.log(str.value);
@@ -28,7 +30,9 @@ export default {
     const toString = ref(JSON.stringify(jsonData));
     console.log(toString.value);
 
-    return {};
+    return {
+      bbb,
+    };
   },
 };
 </script>

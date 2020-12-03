@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { Login } from "@/api/login.js";
 import Cookie from "cookie_js";
 
 Vue.use(Vuex);
@@ -57,6 +58,7 @@ export default new Vuex.Store({
     },
   },
 
+  // 同步异步都可以，可以处理回调
   actions: {
     setMenuStatus(content, data) {
       // content.state
@@ -68,6 +70,18 @@ export default new Vuex.Store({
       console.log(data);
       content.commit("SET_COLLAPSE");
       console.log("store--actions--end");
+    },
+
+    login(content, requestData) {
+      return new Promise((resolve, reject) => {
+        Login(requestData)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     },
   },
 });

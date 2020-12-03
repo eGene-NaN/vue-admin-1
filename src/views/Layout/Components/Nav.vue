@@ -49,7 +49,7 @@ export default {
     // const isCollapse = ref(false);
     // 监听
     const isCollapse = computed(() => {
-      return root.$store.state.isCollapse;
+      return root.$store.state.app.isCollapse;
     });
 
     // console.log(root.$router.options);
@@ -62,9 +62,9 @@ export default {
       console.log(key, keyPath);
     };
 
-    console.log("store's state " + root.$store.state.stateCount);
-    console.log("store's getters " + root.$store.getters.gettersCount);
-    root.$store.commit("SET_COUNT", 100);
+    // console.log("store's state " + root.$store.state.stateCount);
+    // console.log("store's getters " + root.$store.getters.gettersCount);
+    // root.$store.commit("SET_COUNT", 100);
 
     return {
       isCollapse,

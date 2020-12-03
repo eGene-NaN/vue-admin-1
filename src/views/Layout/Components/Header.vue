@@ -23,12 +23,14 @@
 export default {
   name: "layoutHeader",
   setup(props, { root }) {
+    // 测试用
     const navMenuState = () => {
       // 调用store中的mutations
-      // root.$store.commit("SET_COLLAPSE");
+      root.$store.commit("SET_COLLAPSE");
 
+      // 调用store中的actions
       // root.$store.dispatch("setMenuStatus");
-      root.$store.dispatch("setMenuStatus", { name: "XYZ" });
+      // root.$store.dispatch("setMenuStatus", { name: "XYZ" });
     };
 
     return {

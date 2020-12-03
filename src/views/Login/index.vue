@@ -309,16 +309,24 @@ export default {
         code: ruleForm.code,
         // module: "login",
       };
-      Login(requestData)
-        .then((response) => {
-          console.log("登录成功");
-          console.log(response);
-          // 页面跳转
-          root.$router.push({
-            name: "Console",
-          });
-        })
-        .catch((error) => {});
+      // Login(requestData)
+      //   .then((response) => {
+      //     console.log("登录成功");
+      //     console.log(response);
+      //     // 页面跳转
+      //     root.$router.push({
+      //       name: "Console",
+      //     });
+      //   })
+      //   .catch((error) => {});
+      root.$store.dispatch("login", requestData).then((response) => {
+        console.log("登录成功");
+        console.log(response);
+        // 页面跳转
+        root.$router.push({
+          name: "Console",
+        });
+      });
     };
 
     /**
