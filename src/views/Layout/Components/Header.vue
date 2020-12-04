@@ -26,7 +26,7 @@ export default {
     // 测试用
     const navMenuState = () => {
       // 调用store中的mutations
-      root.$store.commit("SET_COLLAPSE");
+      root.$store.commit("app/SET_COLLAPSE");
 
       // 调用store中的actions
       // root.$store.dispatch("setMenuStatus");

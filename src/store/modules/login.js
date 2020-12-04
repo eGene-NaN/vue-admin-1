@@ -1,6 +1,6 @@
 const login = {
   state: {
-    loginA: "10000000",
+    testLoginStore: "testLoginStore",
   },
 
   getters: {},

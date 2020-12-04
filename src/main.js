@@ -7,6 +7,7 @@ import router from "./router/router.js";
 import store from "./store/index.js";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import "./router/premit.js";
 // 自定义全局组件
 import "./icons/index.js";
 
