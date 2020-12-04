@@ -73,7 +73,7 @@ module.exports = {
         changeOrigin: true,
         ws: true,
         pathRewrite: {
-          "^/devApi": "/productapi",
+          "^/devApi": "/productapi/token",
         },
       },
     },

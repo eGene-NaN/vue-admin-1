@@ -319,7 +319,7 @@ export default {
       //     });
       //   })
       //   .catch((error) => {});
-      root.$store.dispatch("login", requestData).then((response) => {
+      root.$store.dispatch("app/login", requestData).then((response) => {
         console.log("登录成功");
         console.log(response);
         // 页面跳转
