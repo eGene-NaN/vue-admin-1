@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise</title>
+</head>
+
+<body>
+  <script>
+    // resolve, reject, all, race
+    // resolve == then, reject == catch
+    // let promise = new Promise((resolve, reject) => {
+    //   //resolve(111);
+    //   reject(222);
+    // })
+
+    // promise.then(response => {
+    //   console.log("成功");
+    //   console.log(response);
+    // }).catch(error => {
+    //   console.log("失败");
+    //   console.log(error);
+    // })
+
+    // 链式
+    function promise1(status) {
+      return new Promise((resolve, reject) => {
+        if (status) {
+          console.log("第1个promise成功")
+          resolve("第1个promise返回数据成功")
+        }
+        if (!status) {
+          console.log("第1个promise失败")
+          reject("第1个promise返回数据失败")
+        }
+      })
+    }
+
+    function promise2(status) {
+      return new Promise((resolve, reject) => {
+        if (status) {
+          console.log("第2个promise成功")
+          resolve("第2个promise返回数据成功")
+        }
+        if (!status) {
+          console.log("第2个promise失败")
+          reject("第2个promise返回数据失败")
+        }
+      })
+    }
+
+    function promise3(status) {
+      return new Promise((resolve, reject) => {
+        if (status) {
+          console.log("第3个promise成功")
+          resolve("第3个promise返回数据成功")
+        }
+        if (!status) {
+          console.log("第3个promise失败")
+          reject("第3个promise返回数据失败")
+        }
+      })
+    }
+
+    // promise1(true).then(response => { // 第1个
+    //   console.log(response)
+    //   return promise2(true)
+    // }).then(response => { // 第2个
+    //   console.log(response)
+    //   return promise3(true)
+    // }).then(response => { // 第3个
+    //   console.log(response)
+    // }).catch(error => {
+    //   console.log(error)
+    // })
+
+    // all方法，参数的数组全部执行成功(resolve)后才会执行then，只要有一个不成功(reject)就会执行catch
+    // Promise.all([promise1(true), promise2(true)]).then(response => {
+    //   console.log("全部调用成功")
+    // }).catch(error => {
+    //   console.log("有些可能失败")
+    // })
+
+    // race，无论数组内的参数执行成功还是失败，都会继续往下执行链式then
+    // 但是当第一个元素返回reject，则会执行catch
+    Promise.race([promise1(false), promise2(false)]).then(response => {
+      console.log("成功")
+    }).catch(error => {
+      console.log("失败")
+    })
+  </script>
+</body>
+
+</html>
