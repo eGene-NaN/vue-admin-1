@@ -11,7 +11,7 @@
         <svg-icon iconClass="loginUser"
                   className="loginUser" />
       </div>
-      <div class="pull-left user-info">管理员</div>
+      <div class="pull-left user-info">{{ username }}</div>
       <div class="pull-left header-icon">
         <svg-icon iconClass="exit"
                   className="exit" />
@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import { computed } from "@vue/composition-api";
 export default {
   name: "layoutHeader",
   setup(props, { root }) {
@@ -33,8 +34,13 @@ export default {
       // root.$store.dispatch("setMenuStatus", { name: "XYZ" });
     };
 
+    const username = computed(() => {
+      return root.$store.state.app.username;
+    });
+
     return {
       navMenuState,
+      username,
     };
   },
 };

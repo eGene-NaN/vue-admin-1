@@ -1,14 +1,15 @@
 import { Login } from "@/api/login.js";
-import { setToken, setUserName } from "@/utils/app.js";
+import { getUserName, setToken, setUserName } from "@/utils/app.js";
 
 const state = {
   token: "",
-  userName: "",
+  username: getUserName() || "",
   isCollapse: JSON.parse(window.sessionStorage.getItem("isCollapse")) || false,
 };
 
 const getters = {
   isCollapse: (state) => state.isCollapse,
+  username: (state) => state.username,
 };
 
 const mutations = {
@@ -16,7 +17,7 @@ const mutations = {
     state.token = value;
   },
   SET_USERNAME(state, value) {
-    state.userName = value;
+    state.username = value;
   },
   SET_COLLAPSE(state) {
     state.isCollapse = !state.isCollapse;
@@ -32,7 +33,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       Login(requestData)
         .then((response) => {
-          let data = response.data;
+          let data = response.data.data;
           // 普通方式调用
           content.commit("SET_TOKEN", data.token);
           content.commit("SET_USERNAME", data.username);
