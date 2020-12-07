@@ -1,5 +1,11 @@
 import { Login } from "@/api/login.js";
-import { getUserName, setToken, setUserName } from "@/utils/app.js";
+import {
+  getUserName,
+  setToken,
+  setUserName,
+  removeToken,
+  removeUserName,
+} from "@/utils/app.js";
 
 const state = {
   token: "",
@@ -44,6 +50,15 @@ const actions = {
         .catch((error) => {
           reject(error);
         });
+    });
+  },
+
+  exit({ commit }) {
+    console.log("logout");
+    return new Promise((resolve, reject) => {
+      removeToken();
+      removeUserName();
+      commit("SET_TOKEN", ""), commit("SET_USERNAME", ""), resolve();
     });
   },
 };

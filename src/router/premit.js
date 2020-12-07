@@ -1,5 +1,6 @@
 import router from "./router.js";
-import { getToken } from "@/utils/app.js";
+import store from "../store/index.js";
+import { getToken, removeToken, removeUserName } from "@/utils/app.js";
 
 const whiteRouter = ["/login"]; // indexOf 判断数组中是否存在某个指定的对象，如果不存在返回-1
 
@@ -12,8 +13,18 @@ const whiteRouter = ["/login"]; // indexOf 判断数组中是否存在某个指�
  */
 router.beforeEach((to, from, next) => {
   if (getToken()) {
-    // 路由动态添加，分配菜单，为每个角色分配不同的菜单
-    next();
+    if (to.path === "/login") {
+      // 清空Cookie
+      removeToken();
+      removeUserName();
+      // 清空store
+      store.commit("app/SET_TOKEN", "");
+      store.commit("app/SET_USERNAME", "");
+      next();
+    } else {
+      // 路由动态添加，分配菜单，为每个角色分配不同的菜单
+      next();
+    }
   } else {
     console.log("token不存在");
     if (whiteRouter.indexOf(to.path) !== -1) {

@@ -12,7 +12,8 @@
                   className="loginUser" />
       </div>
       <div class="pull-left user-info">{{ username }}</div>
-      <div class="pull-left header-icon">
+      <div class="pull-left header-icon"
+           @click="exit">
         <svg-icon iconClass="exit"
                   className="exit" />
       </div>
@@ -38,9 +39,19 @@ export default {
       return root.$store.state.app.username;
     });
 
+    // 退出
+    const exit = () => {
+      root.$store.dispatch("app/exit").then(() => {
+        root.$router.push({
+          name: "Login",
+        });
+      });
+    };
+
     return {
       navMenuState,
       username,
+      exit,
     };
   },
 };

@@ -22,3 +22,7 @@ export function getUserName() {
 export function setUserName(value) {
   return cookie.set(userName, value);
 }
+
+export function removeUserName() {
+  return cookie.remove(userName);
+}
