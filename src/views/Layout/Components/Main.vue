@@ -2,7 +2,6 @@
   <div id="main-wrap">
     <div class="main-content">
       <div class="content">
-        {{ testLoginStore }}
         <router-view />
       </div>
     </div>
@@ -60,7 +59,7 @@ export default {
   width: 100%;
   height: 100%;
   @include webkit(box-sizing, border-box);
-  background-color: #addfaa;
+  // background-color: #addfaa;
 }
 .open {
   #main-wrap {

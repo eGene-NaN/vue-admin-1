@@ -5,6 +5,7 @@
   }
 }
 
+// TODO
 .el-submenu .el-menu-item {
   font-size: 14px;
   padding-left: 50px !important;
@@ -32,6 +33,13 @@
   .el-menu-item:hover {
     background-color: $mainColor !important;
   }
+}
+
+/* Table样式 */
+// TODO
+div.el-table td,
+div.el-table th {
+  text-align: center;
 }
 
 #aaa {
