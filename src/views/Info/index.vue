@@ -5,7 +5,7 @@
         <div class="label-wrap category">
           <label for="">类型：</label>
           <div class="wrap-content">
-            <el-select v-model="value"
+            <el-select v-model="categoryValue"
                        placeholder="请选择"
                        style="width: 100%">
               <el-option v-for="item in options"
@@ -22,7 +22,7 @@
         <div class="label-wrap date">
           <label for="">日期：</label>
           <div class="wrap-content">
-            <el-date-picker v-model="value1"
+            <el-date-picker v-model="dataValue"
                             type="daterange"
                             range-separator="至"
                             start-placeholder="开始日期"
@@ -37,7 +37,7 @@
         <div class="label-wrap key-word">
           <label for="">关键字：</label>
           <div class="wrap-content">
-            <el-select v-model="search_key"
+            <el-select v-model="searchKey"
                        style="width: 100%">
               <el-option v-for="item in searchOption"
                          :key="item.value"
@@ -48,7 +48,7 @@
         </div>
       </el-col>
       <el-col :span="3">
-        <el-input v-model="search_keyWord"
+        <el-input v-model="searchKeyWord"
                   placeholder="请输入内容"
                   style="width: 100%"></el-input>
       </el-col>
@@ -60,7 +60,8 @@
       <el-col :span="2">
         <el-button type="danger"
                    class="pull-right"
-                   style="width: 100%">
+                   style="width: 100%"
+                   @click="dialogInfo = true">
           新增</el-button>
       </el-col>
     </el-row>
@@ -118,13 +119,34 @@
         </el-pagination>
       </el-col>
     </el-row>
+    <!-- 新增弹窗 -->
+    <!-- <el-dialog title="测试用弹窗"
+               :visible.sync="dialogInfo">
+      我是测试用弹窗
+    </el-dialog> -->
+    <DialogInfo :flag.sync="dialogInfo"
+                @close="closeDialog" />
   </div>
 </template>
+
 <script>
+import DialogInfo from "./dialog/info.vue";
 import { reactive, ref } from "@vue/composition-api";
+
 export default {
   name: "infoIndex",
+  components: { DialogInfo },
   setup(props) {
+    /**
+     * 数据
+     */
+    const searchKey = ref("id");
+    const searchKeyWord = ref("");
+    const categoryValue = ref("");
+    const dataValue = ref("");
+    // 信息弹窗标记
+    const dialogInfo = ref(false);
+
     const options = reactive([
       {
         value: "1",
@@ -145,11 +167,8 @@ export default {
       { value: "id", label: "ID" },
       { value: "title", label: "标题" },
     ]);
-    const search_key = ref("id");
-    const search_keyWord = ref("");
-    const value = ref("");
-    const value1 = ref("");
 
+    // table数据
     const tableData = reactive([
       {
         title: "上海市普陀区金沙江路 1518 弄",
@@ -195,14 +214,25 @@ export default {
       console.log(val);
     };
 
+    const closeDialog = () => {
+      dialogInfo.value = false;
+    };
+
     return {
+      // ref
+      dataValue,
+      searchKey,
+      searchKeyWord,
+      dialogInfo,
+      categoryValue,
+
+      // reactive
       options,
-      value,
-      value1,
       searchOption,
-      search_key,
-      search_keyWord,
       tableData,
+      closeDialog,
+
+      // methods
       headClass,
       handleSizeChange,
       handleCurrentChange,
