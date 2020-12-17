@@ -44,7 +44,7 @@ export default {
   name: "dialogInfo",
   data() {
     return {
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       form: {
         name: "",
         region: "",

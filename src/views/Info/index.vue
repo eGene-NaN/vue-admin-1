@@ -95,7 +95,8 @@
                        align="center">
         <template>
           <el-button type="danger"
-                     size="small">删除</el-button>
+                     size="small"
+                     @click="deleteItem">删除</el-button>
           <el-button type="success"
                      size="small">编辑</el-button>
         </template>
@@ -105,7 +106,7 @@
     <!-- 分页 -->
     <el-row>
       <el-col :span="12">
-        <el-button>批量删除</el-button>
+        <el-button @click="deleteAllItem">批量删除</el-button>
       </el-col>
       <el-col :span="12">
         <el-pagination background
@@ -131,12 +132,18 @@
 
 <script>
 import DialogInfo from "./dialog/info.vue";
-import { reactive, ref } from "@vue/composition-api";
+import { reactive, ref, watchEffect } from "@vue/composition-api";
+import { global } from "@/utils/global_V3.0.js";
 
 export default {
   name: "infoIndex",
   components: { DialogInfo },
-  setup(props) {
+  setup(props, { root }) {
+    const { str: aaa, confirm } = global();
+    watchEffect(() => {
+      console.log("watch is " + aaa.value);
+    });
+
     /**
      * 数据
      */
@@ -218,6 +225,40 @@ export default {
       dialogInfo.value = false;
     };
 
+    const deleteItem = () => {
+      confirm({
+        content: "确认删除当前信息？",
+        tip: "警告",
+        fn: confirmDelete,
+        id: "deleteItem",
+      });
+      // root.confirm({
+      //   content: "确认删除当前信息？",
+      //   tip: "警告",
+      //   fn: confirmDelete,
+      //   id: "deleteItem",
+      // });
+    };
+
+    const deleteAllItem = () => {
+      confirm({
+        content: "确认删除选中信息？",
+        type: "success",
+        fn: confirmDelete,
+        id: "deleteAllItem",
+      });
+      // root.confirm({
+      //   content: "确认删除选中信息？",
+      //   type: "success",
+      //   fn: confirmDelete,
+      //   id: "deleteAllItem",
+      // });
+    };
+
+    const confirmDelete = (value) => {
+      console.log(value);
+    };
+
     return {
       // ref
       dataValue,
@@ -236,6 +277,8 @@ export default {
       headClass,
       handleSizeChange,
       handleCurrentChange,
+      deleteItem,
+      deleteAllItem,
     };
   },
 };
