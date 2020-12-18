@@ -106,7 +106,7 @@
     <!-- 分页 -->
     <el-row>
       <el-col :span="12">
-        <el-button @click="deleteAllItem">批量删除</el-button>
+        <el-button size="medium" @click="deleteAllItem">批量删除</el-button>
       </el-col>
       <el-col :span="12">
         <el-pagination background
