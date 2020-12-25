@@ -12,22 +12,17 @@ export function global() {
       center: true,
     })
       .then(() => {
-        str.value = "改变方法内的值，返回给调用者"
-        params.fn && params.fn(params.id);
+        console.log("确定");
+        // 改变方法内的值，返回给调用者
+        str.value = params.id || "";
+        params.fn && params.fn(params.id || "");
         // if (params.fn) {
         //   params.fn();
         // }
-
-        // root.$message({
-        //   type: "success",
-        //   message: "删除成功!",
-        // });
       })
       .catch(() => {
-        // root.$message({
-        //   type: "info",
-        //   message: "已取消删除",
-        // });
+        console.log("取消");
+        params.catchFn && params.catchFn(params.id || "");
       });
   };
   return {

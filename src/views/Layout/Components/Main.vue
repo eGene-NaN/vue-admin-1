@@ -14,20 +14,20 @@ export default {
   setup(props, { root }) {
     const testLoginStore = root.$store.state.login.testLoginStore;
     // 字符串转json对象
-    const str = ref('{"name": "是我。是我。", "title": "BBB"}');
-    console.log(str.value);
-    const json = reactive(JSON.parse(str.value));
-    console.log(json);
-    console.log(json.name);
+    // const str = ref('{"name": "是我。是我。", "title": "BBB"}');
+    // console.log(str.value);
+    // const json = reactive(JSON.parse(str.value));
+    // console.log(json);
+    // console.log(json.name);
 
-    // json对象转字符串
-    const jsonData = reactive({
-      name: "是你，是你。",
-      title: "AAA",
-    });
-    console.log(jsonData);
-    const toString = ref(JSON.stringify(jsonData));
-    console.log(toString.value);
+    // // json对象转字符串
+    // const jsonData = reactive({
+    //   name: "是你，是你。",
+    //   title: "AAA",
+    // });
+    // console.log(jsonData);
+    // const toString = ref(JSON.stringify(jsonData));
+    // console.log(toString.value);
 
     return {
       testLoginStore,

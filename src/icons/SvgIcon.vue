@@ -30,8 +30,8 @@ export default {
   },
 
   setup(props) {
-    console.log(props.iconClass);
-    console.log(props.className);
+    // console.log(props.iconClass);
+    // console.log(props.className);
 
     // 监听，计算属性，得出最终结果返回
     const iconName = computed(() => `#icon-${props.iconClass}`);

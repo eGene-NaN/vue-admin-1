@@ -140,9 +140,9 @@ export default {
   components: { DialogInfo },
   setup(props, { root }) {
     const { str: aaa, confirm } = global();
-    watchEffect(() => {
-      console.log("watch is " + aaa.value);
-    });
+    // watchEffect(() => {
+    //   console.log("watch is " + aaa.value);
+    // });
 
     /**
      * 数据

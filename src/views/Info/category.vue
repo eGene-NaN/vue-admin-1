@@ -1,63 +1,69 @@
 <template>
   <div id="category">
-    <el-button type="danger">添加一级分类</el-button>
+    <el-button type="danger"
+               @click="addFirst">添加一级分类</el-button>
     <hr class="hr-e9e9e9" />
     <div>
       <el-row :gutter="30">
         <el-col :span="8">
           <div class="category">
-            <h4>
-              <svg-icon icon-class="minus"></svg-icon>
-              <label>新闻</label>
-              <div class="button-group">
-                <el-button size="mini"
-                           type="danger"
-                           round>编辑</el-button>
-                <el-button size="mini"
-                           type="success"
-                           round>添加子级</el-button>
-                <el-button size="mini"
-                           round>删除</el-button>
-              </div>
-            </h4>
-            <ul style="list-style:none;">
-              <li>国内
+            <div v-for="firstItem in category.item"
+                 :key="firstItem.id">
+              <h4>
+                <svg-icon icon-class="minus"></svg-icon>
+                <label>{{ firstItem.category_name }}
+                </label>
                 <div class="button-group">
                   <el-button size="mini"
                              type="danger"
                              round>编辑</el-button>
                   <el-button size="mini"
-                             round>删除</el-button>
+                             type="success"
+                             round>添加子级</el-button>
+                  <el-button size="mini"
+                             round
+                             @click="deleteCategoryConfirm(firstItem.id)">删除</el-button>
                 </div>
-              </li>
-              <li>国内</li>
-              <li>国内</li>
-            </ul>
-            <h4>
-              <svg-icon icon-class="minus"></svg-icon>新闻
-            </h4>
-            <ul style="list-style:none;">
-              <li>国内</li>
-              <li>国内</li>
-              <li>国内</li>
-            </ul>
+              </h4>
+              <ul v-if="firstItem.children"
+                  style="list-style:none;">
+                <li v-for="childrenItem in firstItem.children"
+                    :key="childrenItem.id">{{ childrenItem.category_name }}
+                  <div class="button-group">
+                    <el-button size="mini"
+                               type="danger"
+                               round>编辑</el-button>
+                    <el-button size="mini"
+                               round>删除</el-button>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </el-col>
         <el-col :span="16">
           <h4 class="menu-title">一级分类菜单</h4>
-          <el-form label-position="center"
+          <el-form :model="ruleForm"
+                   ref="categoryForm"
+                   label-position="center"
                    label-width="140px"
                    style="width:420px"
-                   size="small"
-                   :model="formLabelAlign">
-            <el-form-item label="一级菜单名称">
-              <el-input v-model="formLabelAlign.name"></el-input>
+                   size="small">
+            <el-form-item label="一级菜单名称"
+                          v-if="categoryFirst">
+              <el-input v-model="ruleForm.categoryName"
+                        :disabled="categoryFirstDisabled"></el-input>
             </el-form-item>
-            <el-form-item label="二级菜单名称">
-              <el-input v-model="formLabelAlign.region"></el-input>
+            <el-form-item label="二级菜单名称"
+                          v-if="categorySec">
+              <el-input v-model="ruleForm.secCategoryName"
+                        :disabled="categorySecDisabled"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary">确定</el-button>
+              <el-button type="danger"
+                         @click="submit"
+                         :loading="submitButtonLoading"
+                         :disabled="submitButtonDisabled">确定</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -66,17 +72,172 @@
   </div>
 </template>
 <script>
-import { reactive } from "@vue/composition-api";
+import { AddFirstCategory, GetCategory, DeleteCategory } from "@/api/news.js";
+import { ref, reactive, onMounted, watchEffect } from "@vue/composition-api";
+import { global } from "@/utils/global_V3.0.js";
 export default {
   name: "category",
-  setup(props) {
-    const formLabelAlign = reactive({
-      name: "",
-      region: "",
-      type: "",
+  setup(props, { root, refs }) {
+    // global
+    const { str: aaa, confirm } = global();
+
+    /**
+     * ref
+     */
+    const categoryFirst = ref(true);
+    const categorySec = ref(true);
+    const submitButtonLoading = ref(false);
+    const categoryFirstDisabled = ref(true);
+    const categorySecDisabled = ref(true);
+    const submitButtonDisabled = ref(true);
+    const deleteCategoryId = ref("");
+    /**
+     * reactive
+     */
+    // const form = reactive({
+    //   categoryName: "",
+    //   secCategoryName: "",
+    // });
+
+    // 表单绑定数据
+    const ruleForm = reactive({
+      categoryName: "",
+      secCategoryName: "",
     });
+
+    const category = reactive({
+      item: [
+        {
+          id: "01",
+          category_name: "国际信息",
+          children: [
+            {
+              id: "002",
+              category_name: "日本",
+            },
+          ],
+        },
+      ],
+    });
+
+    /**
+     * methonds
+     */
+    const submit = () => {
+      if (!ruleForm.categoryName) {
+        root.$message({
+          message: "分类名称不能为空",
+          type: "error",
+        });
+        return;
+      }
+      submitButtonLoading.value = true;
+      AddFirstCategory({ categoryName: ruleForm.categoryName })
+        .then((response) => {
+          let data = response.data;
+          if (data.resCode === 0) {
+            root.$message({
+              message: data.message,
+              type: "success",
+            });
+            // category.item.push(response.data.data);
+            getCategory();
+            submitButtonLoading.value = false;
+            refs.categoryForm.resetFields();
+          }
+        })
+        .catch((error) => {
+          submitButtonLoading.value = false;
+          refs.categoryForm.resetFields();
+        });
+    };
+
+    const addFirst = () => {
+      categoryFirst.value = true;
+      categorySec.value = false;
+      categoryFirstDisabled.value = false;
+      categorySecDisabled.value = false;
+      submitButtonDisabled.value = false;
+    };
+
+    const getCategory = () => {
+      GetCategory()
+        .then((response) => {
+          let responseData = response.data.data.data;
+          category.item = responseData;
+        })
+        .catch((error) => {
+          console.log("getCategory Error");
+        });
+    };
+
+    const deleteCategoryConfirm = (categoryId) => {
+      // DeleteCategory({
+      //   categoryId: categoryId,
+      // })
+      //   .then((response) => {
+      //     getCategory();
+      //   })
+      //   .catch((error) => {
+      //     console.log("deleteBACError");
+      //   });
+      deleteCategoryId.value = categoryId;
+      confirm({
+        content: "确认删除当前分类吗？",
+        tip: "警告",
+        fn: () => {
+          DeleteCategory({
+            categoryId: deleteCategoryId.value,
+          })
+            .then((response) => {
+              // 第一种方法，重新取请求接口
+              // getCategory();
+              // 第二种方法，操作数组，找到要删除的那个元素Id，利用splice函数删除
+              // let index = category.item.findIndex(
+              //   (item) => item.id == deleteCategoryId.value
+              // );
+              // category.item.splice(index, 1);
+              // 第三种方法，利用数组的过滤函数filter，重新过滤出一个符合条件的数组
+              let newData = category.item.filter(
+                (item) => item.id != deleteCategoryId.value
+              );
+              category.item = newData;
+            })
+            .catch((error) => {
+              console.log("deleteCategoryError");
+            });
+        },
+        catchFn: () => {
+          deleteCategoryId.value = "";
+        },
+        id: "deleteCategory",
+      });
+    };
+
+    /**
+     * 生命周期
+     */
+    // 画面挂载完成后执行
+    onMounted(() => {
+      getCategory();
+    });
+
     return {
-      formLabelAlign,
+      // ref
+      category,
+      categoryFirst,
+      categorySec,
+      submitButtonLoading,
+      categoryFirstDisabled,
+      submitButtonDisabled,
+      categorySecDisabled,
+      deleteCategoryId,
+      //reactive
+      ruleForm,
+      // methods
+      submit,
+      addFirst,
+      deleteCategoryConfirm,
     };
   },
 };
