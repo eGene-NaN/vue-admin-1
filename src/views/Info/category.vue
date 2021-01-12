@@ -1,12 +1,13 @@
 <template>
   <div id="category">
     <el-button type="danger"
-               @click="addFirst">添加一级分类</el-button>
+               @click="addFirst({ type: 'category_first_add' })">添加一级分类</el-button>
     <hr class="hr-e9e9e9" />
     <div>
       <el-row :gutter="30">
         <el-col :span="8">
           <div class="category">
+            <!-- 一级分类 -->
             <div v-for="firstItem in category.item"
                  :key="firstItem.id">
               <h4>
@@ -16,6 +17,7 @@
                 <div class="button-group">
                   <el-button size="mini"
                              type="danger"
+                             @click="editCategory({ data: firstItem, type: 'category_first_edit' })"
                              round>编辑</el-button>
                   <el-button size="mini"
                              type="success"
@@ -25,6 +27,7 @@
                              @click="deleteCategoryConfirm(firstItem.id)">删除</el-button>
                 </div>
               </h4>
+              <!-- 二级分类 -->
               <ul v-if="firstItem.children"
                   style="list-style:none;">
                 <li v-for="childrenItem in firstItem.children"
@@ -72,7 +75,12 @@
   </div>
 </template>
 <script>
-import { AddFirstCategory, GetCategory, DeleteCategory } from "@/api/news.js";
+import {
+  AddFirstCategory,
+  GetCategory,
+  DeleteCategory,
+  EditCategory,
+} from "@/api/news.js";
 import { ref, reactive, onMounted, watchEffect } from "@vue/composition-api";
 import { global } from "@/utils/global_V3.0.js";
 export default {
@@ -91,6 +99,7 @@ export default {
     const categorySecDisabled = ref(true);
     const submitButtonDisabled = ref(true);
     const deleteCategoryId = ref("");
+    const submitButtonType = ref("");
     /**
      * reactive
      */
@@ -118,12 +127,22 @@ export default {
           ],
         },
       ],
+      current: [],
     });
 
     /**
      * methonds
      */
     const submit = () => {
+      if (submitButtonType.value === "category_first_add") {
+        addFirstCategory();
+      }
+      if (submitButtonType.value === "category_first_edit") {
+        editFirstCategory();
+      }
+    };
+
+    const addFirstCategory = () => {
       if (!ruleForm.categoryName) {
         root.$message({
           message: "分类名称不能为空",
@@ -152,12 +171,14 @@ export default {
         });
     };
 
-    const addFirst = () => {
+    const addFirst = (params) => {
       categoryFirst.value = true;
       categorySec.value = false;
       categoryFirstDisabled.value = false;
       categorySecDisabled.value = false;
       submitButtonDisabled.value = false;
+      submitButtonType.value = params.type;
+      console.log(submitButtonType.value);
     };
 
     const getCategory = () => {
@@ -214,6 +235,46 @@ export default {
       });
     };
 
+    // 编辑分类
+    const editCategory = (params) => {
+      categoryFirstDisabled.value = false;
+      categorySec.value = false;
+      submitButtonDisabled.value = false;
+
+      ruleForm.categoryName = params.data.category_name;
+      submitButtonType.value = params.type;
+      category.current = params.data;
+    };
+
+    const editFirstCategory = () => {
+      if (category.current.length == 0) {
+        root.$message({
+          message: "未选择分类！！",
+          type: "error",
+        });
+        return;
+      }
+
+      let requestDate = {
+        id: category.current.id,
+        categoryName: ruleForm.categoryName,
+      };
+      EditCategory(requestDate)
+        .then((response) => {
+          root.$message({
+            message: response.data.message,
+            type: "success",
+          });
+          // getCategory();
+          category.current.category_name = response.data.data.data.categoryName;
+          ruleForm.categoryName = "";
+          category.current = [];
+        })
+        .catch((error) => {
+          console.log("editCategory Error");
+        });
+    };
+
     /**
      * 生命周期
      */
@@ -232,12 +293,14 @@ export default {
       submitButtonDisabled,
       categorySecDisabled,
       deleteCategoryId,
+      submitButtonType,
       //reactive
       ruleForm,
       // methods
       submit,
       addFirst,
       deleteCategoryConfirm,
+      editCategory,
     };
   },
 };

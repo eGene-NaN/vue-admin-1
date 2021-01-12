@@ -25,7 +25,7 @@ export function GetCategory(data) {
 }
 
 /**
- * 获取分类
+ * 删除分类
  */
 export function DeleteCategory(requestData) {
   return service.request({
@@ -33,6 +33,20 @@ export function DeleteCategory(requestData) {
     url: "/news/deleteCategory/",
     data: {
       categoryId: requestData.categoryId,
+    },
+  });
+}
+
+/**
+ * 修改分类
+ */
+export function EditCategory(requestData) {
+  return service.request({
+    method: "post",
+    url: "/news/editCategory/",
+    data: {
+      id: requestData.id,
+      categoryName: requestData.categoryName,
     },
   });
 }
